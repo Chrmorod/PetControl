@@ -8,7 +8,7 @@ HX711ADC balanza(A1, A0, 64);  // El valor predeterminado 128 para "gain" es uti
 
 // funciones
 int calibrateScale(String command);
-
+int getReading(String command);
 // Función para enviar datos a la nube
 void notify(String message) {
   Serial.println(message);          // Mostrar el mensaje en la consola Serial
@@ -24,6 +24,11 @@ void printInitialReadings() {
   notify("get value: " + String(balanza.get_value(5)));   // Imprimir el promedio de 5 lecturas del ADC menos el peso de tara
 
   notify("get units: " + String(balanza.get_units(5), 1));  // Imprimir el promedio de 5 lecturas del ADC menos el peso de tara dividido por SCALE
+}
+int getReading(String command) {
+  float reading = balanza.get_units(1); 
+  notify("One reading: " + String(reading, 1));
+  return reading;                     
 }
 // Función para calibrar la balanza
 int calibrateScale(String command) {
@@ -47,9 +52,10 @@ void setup() {
 
   // Registro funcion
   Particle.function("calibrateScale", calibrateScale);
+  Particle.function("getReading", getReading);
 }
 
 void loop() {
-  notify("valor de lectura: " + String(balanza.get_value(10),0));
-  delay(100);
+  //notify("valor de lectura: " + String(balanza.get_value(10),0));
+  //delay(100);
 }
