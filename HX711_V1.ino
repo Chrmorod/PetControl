@@ -31,6 +31,13 @@ int adjustCalibrationFactor(String command) {
   notify("Nuevo factor de calibración: " + String(calibration_factor));
   return 1;  // Retorna éxito
 }
+// Método para leer el peso en gramos
+float getWeightGrams() {
+    scale.set_scale(calibration_factor); 
+    float weight = scale.get_units(50); 
+    
+    return weight;  // Devolver el valor del peso en gramos
+}
 
 void setup() {
     Serial.begin(9600);
