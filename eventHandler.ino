@@ -10,8 +10,8 @@ SerialLogHandler logHandler(LOG_LEVEL_INFO);
 /******************************************************************************/
 #define DT D2			
 #define SCK D3	
-#define STP D9
-#define DIR D7
+#define STP D6
+#define DIR D4
 bool engineState = false;
 float knowWeight = 138.0; //138 g --> Change knowWeight
 float CALIBRATION_FACTOR = 1;
@@ -21,12 +21,16 @@ void notify(String message) {
   Particle.publish("Taki-App-Info", message, PRIVATE); 
 }
 int handlerEngine(String command) {
-    engineState = !engineState; //change engine state 
-    digitalWrite(STP, engineState ? HIGH : LOW); // on/off engine steps 
-    delayMicroseconds(5); // falling edge --> HIGH - LOW
-    digitalWrite(STP, engineState ? LOW : HIGH); // off/on engine steps
-    return engineState ? 1 : 0; // Return state (1 - On, 0 - Off)
+    digitalWrite(DIR, LOW);
+    for(int i=0;i<100;i++){
+        digitalWrite(STP,HIGH);
+        delay(10);
+        digitalWrite(STP, LOW);
+        delay(10);
+    }
+        return 1;
 }
+
 float handlerCalibrationFactor(float rawValue = 0) {
     if(rawValue != 0){
         //float calibration_factor = 1090.420571; 
